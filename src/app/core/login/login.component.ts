@@ -1,5 +1,7 @@
 // src/app/core/login/login.component.ts
 import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import * as AuthActions from '../../core/store/auth/auth.actions';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -21,7 +23,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private store: Store
   ) {
     this.form = this.fb.group({
       username: ['', Validators.required],
@@ -30,10 +33,7 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    const { username, password } = this.form.value;
-    this.auth.login(username, password).subscribe({
-      next: () => this.router.navigate(['/products']),
-      error: (err) => alert(err.message)
-    });
+    const { username: email, password } = this.form.value;
+    this.store.dispatch(AuthActions.login({ email, password }));
   }
 }
