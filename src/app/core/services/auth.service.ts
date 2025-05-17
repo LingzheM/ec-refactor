@@ -26,6 +26,30 @@ export class AuthService {
 
     constructor(private http: HttpClient) {}
 
+
+    /**
+     * 新規登録
+     * @param email 
+     * @param password 
+     * @returns 
+     */
+    register(email: string, password: string): Observable<CustomerAccount> {
+        if (this.useMock) {
+            return of ({ ...this.mockProfile, email }).pipe(delay(500));
+        }
+        return this.http
+        .post<CustomerAccount>(`${environment.apiUrl}/customers`, { email, password });
+    }
+
+
+
+    /**
+     * ログイン
+     * @param email 
+     * @param password 
+     * @returns 
+     */
+
     login(email: string, password: string): Observable<boolean> {
         if (this.useMock) {
             const ok = email === this.mockUser.email && password === this.mockUser.password;
@@ -68,6 +92,9 @@ export class AuthService {
         return !!localStorage.getItem('access_token');
     }
 
+    /**
+     * プロフィール取得
+     */
     getProfile(): Observable<CustomerAccount> {
         if (this.useMock) {
             return of(this.mockProfile).pipe(delay(300));
@@ -81,6 +108,20 @@ export class AuthService {
     }
 
     /**
+     * プロフィール更新
+     * @param data 
+     * @returns 
+     */
+    updateProfile(data: Partial<CustomerAccount>): Observable<CustomerAccount> {
+        if (this.useMock) {
+            this.mockProfile = { ...this.mockProfile, ...data };
+            return of(this.mockProfile).pipe(delay(300));
+        }
+        return this.http.patch<CustomerAccount>(`${environment.apiUrl}/customers/me`, data)
+        .pipe(tap(profile => this.mockProfile = profile));
+    }
+
+    /**
      * ログイン直後などに同期的にプロフィール取得したい
      */
     getProfileSync(): CustomerAccount {
@@ -89,5 +130,28 @@ export class AuthService {
             throw new Error('プロフィールが取得できません');
         }
         return JSON.parse(json) as CustomerAccount;
+    }
+
+    /**
+     * アカウント凍結
+     * @returns 
+     */
+    freezeAccount(): Observable<void> {
+        if (this.useMock) {
+            this.mockProfile.status = 'frozen';
+            return of (void 0).pipe(delay(300));
+        }
+        return this.http.post<void>(`${environment}/customers/me/freeze`, {});
+    }
+
+    /**
+     * アカウント削除　GDPR対応
+     * @returns 
+     */
+    deleteAccount(): Observable<void> {
+        if (this.useMock) {
+            return of(void 0).pipe(delay(300));
+        }
+        return this.http.delete<void>(`${environment.apiUrl}/customers/me`);
     }
 }

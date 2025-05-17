@@ -20,7 +20,7 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     StoreModule.forRoot({ auth: authReducer }),
     EffectsModule.forRoot([AuthEffects]),
-    StoreDevtoolsModule.instrument({ maxAge: 25})
+    StoreDevtoolsModule.instrument({ maxAge: 25 })
   ],
   bootstrap: [AppComponent]
 })

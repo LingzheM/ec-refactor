@@ -2,8 +2,13 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './core/login/login.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { RegisterComponent } from './core/register/register.component';
 
 const routes: Routes = [
+  {
+    path: 'register',
+    loadComponent: () => import('./core/login/login.component').then(m => m.LoginComponent),
+  },
   {
     path: 'login',
     loadComponent: () => import('./core/login/login.component').then(m => m.LoginComponent),

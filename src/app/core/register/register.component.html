@@ -1,0 +1,32 @@
+<form [formGroup]="form" (ngSubmit)="onSumit()">
+    <div>
+        <label>Email</label>
+        <input type="email" formControlName="email" />
+        <small *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
+            有効なメールアドレスを入力してください
+        </small>
+    </div>
+
+    <div>
+        <label>パスワード</label>
+        <input type="password" formControlName="password" />
+        <small *ngIf="form.get('password')?.touched && form.get('password')?.errors">
+            8文字以上、大文字と数字を含めてください
+        </small>
+    </div>
+
+    <div>
+        <label>パスワード（確認）</label>
+        <input type="password" formControlName="confirmPassword" />
+        <small *ngIf="form.hasError('mismatch')">
+            パスワードが一致しません
+        </small>
+    </div>
+
+    <button type="submit" [disabled]="form.invalid || loading">
+        {{ loading ? '登録中' : '新規登録' }}
+    </button>
+
+    <div *ngIf="error" class="error">{{error}}</div>
+
+</form>
