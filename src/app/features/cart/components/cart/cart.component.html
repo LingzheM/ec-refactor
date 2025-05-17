@@ -1,0 +1,14 @@
+<div *ngIf="loading">Loading...</div>
+<div *ngIf="!loading && cart">
+    <table>
+        <tr *ngFor="let it of cart.items">
+            <td>{{ it.product.name }}</td>
+            <td>
+                <input type="number" [value]="it.quantity" (change)="update(it.id, $event.target.valueAsNumber)">
+            </td>
+            <td>${{ it.product.price * it.quantity | number }}</td>
+            <td><button (click)="remove(it.id)">x</button></td>
+        </tr>
+    </table>
+    <p>合計: ${{ cart.items.reduce((sum, i) => sum+i.product.price * i,quantity, 0) | number }}</p>
+</div>

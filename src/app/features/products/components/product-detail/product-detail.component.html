@@ -1,0 +1,9 @@
+<!-- src/app/features/products/components/product-detail.component.html -->
+<div *ngIf="loading">Loading…</div>
+<div *ngIf="!loading && product">
+  <h2>{{ product.name }}</h2>
+  <p>{{ product.description }}</p>
+  <p>¥{{ product.price | number }}</p>
+  <img [src]="product.imageUrl" alt="{{ product.name }}" />
+  <button (click)="addToCart()">カートに入れる</button>
+</div>
