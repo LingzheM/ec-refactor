@@ -1,9 +1,7 @@
-// src/app/app.module.ts
 import { NgModule } from '@angular/core';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { authReducer } from './core/store/auth/auth.reducer';
 import { AuthEffects } from './core/store/auth/auth.effects';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -16,11 +14,13 @@ import { HttpClientModule } from '@angular/common/http';
   imports: [
     BrowserModule,
     HttpClientModule,
-    CoreModule,        // ← ここがエラーだった場所
-    AppRoutingModule,
-    StoreModule.forRoot({ auth: authReducer }),
+    // StoreModule と EffectsModule を先に初期化
+    StoreModule.forRoot({}),  // 空のオブジェクトで初期化
     EffectsModule.forRoot([AuthEffects]),
-    StoreDevtoolsModule.instrument({ maxAge: 25 })
+    StoreDevtoolsModule.instrument({ maxAge: 25 }),
+    // CoreModule は後でインポート
+    CoreModule,
+    AppRoutingModule
   ],
   bootstrap: [AppComponent]
 })

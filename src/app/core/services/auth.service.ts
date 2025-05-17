@@ -54,10 +54,8 @@ export class AuthService {
         if (this.useMock) {
             const ok = email === this.mockUser.email && password === this.mockUser.password;
             if (!ok) {
-                return of(false).pipe(
-                    delay(500),
-                    tap(() => {throw new Error('ユーザー名またはパスワードが違います');})
-                );
+                // throwErrorを使用してObservableエラーを返す
+                return throwError(() => new Error('ユーザー名またはパスワードが違います')).pipe(delay(500));
             }
             return of(true).pipe(
                 delay(500),

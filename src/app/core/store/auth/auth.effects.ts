@@ -1,5 +1,5 @@
 // auth.effects.ts
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as AuthActions from './auth.actions';
 import { AuthService } from '../../services/auth.service';
@@ -9,14 +9,14 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthEffects {
-  constructor(
-    private actions$: Actions,
-    private auth: AuthService,
-    private router: Router
-  ) {}
+  
+  // constructor を削除し、inject() で依存注入
+  private actions$ = inject(Actions);
+  private auth = inject(AuthService);
+  private router = inject(Router);
 
-  login$ = createEffect(() =>
-    this.actions$.pipe(
+  login$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(AuthActions.login),
       exhaustMap(({ email, password }) =>
         this.auth.login(email, password).pipe(
@@ -29,7 +29,7 @@ export class AuthEffects {
         )
       )
     )
-  );
+  });
 
   loginSuccess$ = createEffect(
     () =>

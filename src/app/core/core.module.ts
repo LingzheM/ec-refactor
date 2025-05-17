@@ -7,11 +7,17 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { StoreModule } from '@ngrx/store';
+import { authReducer } from './store/auth/auth.reducer';
 
 @NgModule({
   imports: [
+    CommonModule,     // CommonModule を追加
+    ReactiveFormsModule,  // ReactiveFormsModule を追加
     LoginComponent,   // スタンドアロンなので imports で読み込む
-    RegisterComponent
+    RegisterComponent,
+    // CoreModule では NgRx のステートを feature として追加
+    StoreModule.forFeature('auth', authReducer)
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
